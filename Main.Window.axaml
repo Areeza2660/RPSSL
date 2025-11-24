@@ -10,7 +10,6 @@
 
         <TextBlock Text="Choose your shape:" FontSize="14"/>
 
-        <!-- IMPORTANT: WrapPanel DOES NOT SUPPORT Spacing in Avalonia 11.3 -->
         <WrapPanel Margin="0,5,0,10">
             <Button Content="Rock" Click="OnShapeClick"/>
             <Button Content="Paper" Click="OnShapeClick"/>
