@@ -1,42 +1,27 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Class="RPSSL_GUII.MainWindow"
-        Title="RPSSL (først til 3)"
-        Width="480" Height="360"
-        Background="#f8f8f8"
-        FontSize="16"
-        FontFamily="Segoe UI"
-        Foreground="#1f1f1f">
+        x:Class="RPSSL.MainWindow"
+        Width="400" Height="300"
+        Title="Rock Paper Scissors Spock Lizard">
 
-    <StackPanel Margin="16" Spacing="12">
+    <StackPanel Margin="20" Spacing="10">
 
-        <!-- Titel -->
-        <TextBlock Text="Rock · Paper · Scissors · Lizard · Spock"
-                   FontSize="20"
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"/>
+        <TextBlock Text="Rock Paper Scissors Spock Lizard" FontSize="18" HorizontalAlignment="Center"/>
 
-        <!-- Rundeinfo -->
-        <StackPanel>
-            <TextBlock x:Name="RoundText" Text="Vælg en form for at starte…" />
-            <TextBlock x:Name="ChoicesText" Text="Du: -   |   Agent: -" />
-            <TextBlock x:Name="ScoreText" Text="Score — Du: 0 | Agent: 0" FontWeight="SemiBold"/>
-        </StackPanel>
+        <TextBlock Text="Choose your shape:" FontSize="14"/>
 
-        <!-- Spilknapper -->
-        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
-            <Button x:Name="BtnRock"     Content="Rock"/>
-            <Button x:Name="BtnPaper"    Content="Paper"/>
-            <Button x:Name="BtnScissors" Content="Scissors"/>
-            <Button x:Name="BtnLizard"   Content="Lizard"/>
-            <Button x:Name="BtnSpock"    Content="Spock"/>
-        </StackPanel>
+        <!-- IMPORTANT: WrapPanel DOES NOT SUPPORT Spacing in Avalonia 11.3 -->
+        <WrapPanel Margin="0,5,0,10">
+            <Button Content="Rock" Click="OnShapeClick"/>
+            <Button Content="Paper" Click="OnShapeClick"/>
+            <Button Content="Scissors" Click="OnShapeClick"/>
+            <Button Content="Lizard" Click="OnShapeClick"/>
+            <Button Content="Spock" Click="OnShapeClick"/>
+        </WrapPanel>
 
-        <!-- Nulstil og Luk -->
-        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
-            <Button x:Name="BtnReset" Content="Nulstil"/>
-            <Button x:Name="BtnClose" Content="Luk"/>
-        </StackPanel>
+        <Separator/>
 
+        <TextBlock Name="TxtAgentChoice" Text="Agent chose: –" FontSize="14"/>
+        <TextBlock Name="TxtResult" Text="Result: –" FontSize="16" FontWeight="Bold"/>
     </StackPanel>
 </Window>
