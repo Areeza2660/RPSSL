@@ -2,94 +2,75 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using System;
 
-namespace RPSSL_GUII
+namespace RPSSL
 {
     public partial class MainWindow : Window
     {
-        private int playerScore = 0;
-        private int agentScore = 0;
-        private Random random = new Random();
+        private Random _random = new Random();
+
+        private enum Shape
+        {
+            Rock,
+            Paper,
+            Scissors,
+            Lizard,
+            Spock
+        }
 
         public MainWindow()
         {
             InitializeComponent();
-
-            // Knyt knapper til eventhandlers
-            BtnRock.Click += OnPlayerChoice;
-            BtnPaper.Click += OnPlayerChoice;
-            BtnScissors.Click += OnPlayerChoice;
-            BtnLizard.Click += OnPlayerChoice;
-            BtnSpock.Click += OnPlayerChoice;
-
-            BtnReset.Click += (_, __) => ResetGame();
-            BtnClose.Click += (_, __) => Close();
         }
 
-        private void OnPlayerChoice(object? sender, RoutedEventArgs e)
+        private void OnShapeClick(object sender, RoutedEventArgs e)
         {
-            if (sender is not Button button) return;
-
-            string playerChoice = button.Content?.ToString() ?? "";
-            string[] options = { "Rock", "Paper", "Scissors", "Lizard", "Spock" };
-            string agentChoice = options[random.Next(options.Length)];
-
-            ChoicesText.Text = $"Du: {playerChoice}   |   Agent: {agentChoice}";
-
-            int result = Resolve(playerChoice, agentChoice);
-            if (result == 1) playerScore++;
-            else if (result == -1) agentScore++;
-
-            ScoreText.Text = $"Stilling — Du: {playerScore} | Agent: {agentScore}";
-
-            if (playerScore == 3 || agentScore == 3)
+            if (sender is Button btn && Enum.TryParse<Shape>(btn.Content.ToString(), out Shape human))
             {
-                RoundText.Text = playerScore == 3 ? "🎉 Du vandt!" : "🤖 Agenten vandt!";
-                DisableButtons();
-            }
-            else
-            {
-                RoundText.Text = "Vælg en ny figur…";
+                Shape agent = (Shape)_random.Next(0, 5);
+
+                TxtAgentChoice!.Text = $"Agent chose: {agent}";
+                TxtResult.Text = $"Result: {DetermineResult(human, agent)}";
             }
         }
 
-        private int Resolve(string player, string agent)
+        private string DetermineResult(Shape human, Shape agent)
         {
-            if (player == agent) return 0;
+            int diff = (int)agent - (int)human;
 
-            return (player, agent) switch
+            return diff switch
             {
-                ("Rock", "Scissors") or ("Rock", "Lizard") => 1,
-                ("Paper", "Rock") or ("Paper", "Spock") => 1,
-                ("Scissors", "Paper") or ("Scissors", "Lizard") => 1,
-                ("Lizard", "Spock") or ("Lizard", "Paper") => 1,
-                ("Spock", "Rock") or ("Spock", "Scissors") => 1,
-                _ => -1,
+                0 => "Tie",
+                -4 or -2 or 1 or 3 => "You win!",
+                -3 or -1 or 2 or 4 => "You lose!",
+                _ => "Error"
             };
-        }
-
-        private void DisableButtons()
-        {
-            BtnRock.IsEnabled = false;
-            BtnPaper.IsEnabled = false;
-            BtnScissors.IsEnabled = false;
-            BtnLizard.IsEnabled = false;
-            BtnSpock.IsEnabled = false;
-        }
-
-        private void ResetGame()
-        {
-            playerScore = 0;
-            agentScore = 0;
-
-            ScoreText.Text = "Stilling — Du: 0 | Agent: 0";
-            RoundText.Text = "Vælg en figur for at starte spillet…";
-            ChoicesText.Text = "Du: -   |   Agent: -";
-
-            BtnRock.IsEnabled = true;
-            BtnPaper.IsEnabled = true;
-            BtnScissors.IsEnabled = true;
-            BtnLizard.IsEnabled = true;
-            BtnSpock.IsEnabled = true;
         }
     }
 }
+
+/*
+ Jeg har lavet mine koder ved hjælp af GEKOS hjemmeside
+Kildekommentar – brugt undervisningsmateriale:
+
+- Random (_random.Next())
+  → Fra "Generating random numbers"
+    https://industrial-programming.aydos.de/sections/generating-random-numbers.html
+
+- Enum Shape (Rock, Paper, Scissors, Lizard, Spock)
+  → Fra Activity 29: RPSSL resolution logic
+    https://industrial-programming.aydos.de/sections/rpssl-resolution.html
+
+- Click event handler (OnShapeClick)
+  → Fra Activity 32: Currency converter GUI
+    https://industrial-programming.aydos.de/sections/currency-converter-gui.html
+
+- Enum.TryParse(...) til at konvertere knaptekst til enum
+  → Fra eksempler på "Converting input" + "Enum basics" i enum-sektionen
+
+- Switch expression i DetermineResult()
+  → Fra "Switch" sektionen
+    https://industrial-programming.aydos.de/sections/switch.html
+
+- RPSSL-vind/regler (diff tabel)
+  → Direkte baseret på lærens resolution table i Activity 29.
+*/
