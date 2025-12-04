@@ -1,26 +1,40 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="RPSSL.MainWindow"
-        Width="400" Height="300"
+        Width="400" Height="320"
         Title="Rock Paper Scissors Spock Lizard">
 
     <StackPanel Margin="20" Spacing="10">
 
-        <TextBlock Text="Rock Paper Scissors Spock Lizard" FontSize="18" HorizontalAlignment="Center"/>
+        <TextBlock Text="Rock Paper Scissors Spock Lizard"
+                   FontSize="18"
+                   HorizontalAlignment="Center"/>
 
         <TextBlock Text="Choose your shape:" FontSize="14"/>
-
-        <WrapPanel Margin="0,5,0,10">
-            <Button Content="Rock" Click="OnShapeClick"/>
-            <Button Content="Paper" Click="OnShapeClick"/>
-            <Button Content="Scissors" Click="OnShapeClick"/>
-            <Button Content="Lizard" Click="OnShapeClick"/>
-            <Button Content="Spock" Click="OnShapeClick"/>
+        
+        <WrapPanel x:Name="ButtonPanel" Margin="0,5,0,10">
+            <Button Content="Rock" Click="OnShapeClick" Margin="2"/>
+            <Button Content="Paper" Click="OnShapeClick" Margin="2"/>
+            <Button Content="Scissors" Click="OnShapeClick" Margin="2"/>
+            <Button Content="Lizard" Click="OnShapeClick" Margin="2"/>
+            <Button Content="Spock" Click="OnShapeClick" Margin="2"/>
         </WrapPanel>
 
         <Separator/>
 
-        <TextBlock Name="TxtAgentChoice" Text="Agent chose: –" FontSize="14"/>
-        <TextBlock Name="TxtResult" Text="Result: –" FontSize="16" FontWeight="Bold"/>
+        <!-- Scoreboard -->
+        <TextBlock Name="TxtScore"
+                   Text="Score – You: 0 | Agent: 0"
+                   FontSize="14"
+                   FontWeight="Bold"/>
+
+        <TextBlock Name="TxtAgentChoice"
+                   Text="Agent chose: –"
+                   FontSize="14"/>
+
+        <TextBlock Name="TxtResult"
+                   Text="Result: –"
+                   FontSize="16"
+                   FontWeight="Bold"/>
     </StackPanel>
 </Window>
