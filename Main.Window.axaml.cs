@@ -17,6 +17,17 @@ namespace RPSSL
             Spock
         }
 
+        private enum RoundResult
+        {
+            Tie,
+            HumanWin,
+            AgentWin
+        }
+
+        private int _humanScore = 0;
+        private int _agentScore = 0;
+        private bool _gameOver = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -24,32 +35,84 @@ namespace RPSSL
 
         private void OnShapeClick(object sender, RoutedEventArgs e)
         {
+            if (_gameOver)
+                return;
+
             if (sender is Button btn && Enum.TryParse<Shape>(btn.Content.ToString(), out Shape human))
             {
                 Shape agent = (Shape)_random.Next(0, 5);
 
                 TxtAgentChoice!.Text = $"Agent chose: {agent}";
-                TxtResult.Text = $"Result: {DetermineResult(human, agent)}";
+
+                RoundResult roundResult = DetermineResult(human, agent);
+
+                switch (roundResult)
+                {
+                    case RoundResult.Tie:
+                        TxtResult.Text = "Result: Tie";
+                        break;
+
+                    case RoundResult.HumanWin:
+                        _humanScore++;
+                        TxtResult.Text = "Result: You win!";
+                        break;
+
+                    case RoundResult.AgentWin:
+                        _agentScore++;
+                        TxtResult.Text = "Result: You lose!";
+                        break;
+                }
+
+                // Opdater score
+                TxtScore.Text = $"Score – You: {_humanScore} | Agent: {_agentScore}";
+
+                // Tjek om nogen har nået 3 point
+                CheckForGameOver();
             }
         }
 
-        private string DetermineResult(Shape human, Shape agent)
+        private RoundResult DetermineResult(Shape human, Shape agent)
         {
             int diff = (int)agent - (int)human;
 
             return diff switch
             {
-                0 => "Tie",
-                -4 or -2 or 1 or 3 => "You win!",
-                -3 or -1 or 2 or 4 => "You lose!",
-                _ => "Error"
+                0 => RoundResult.Tie,
+                -4 or -2 or 1 or 3 => RoundResult.HumanWin,
+                -3 or -1 or 2 or 4 => RoundResult.AgentWin,
+                _ => RoundResult.Tie // fallback
             };
+        }
+
+        private void CheckForGameOver()
+        {
+            if (_humanScore >= 3)
+            {
+                TxtResult.Text = "Game over: You reached 3 points. You win";
+                EndGame();
+            }
+            else if (_agentScore >= 3)
+            {
+                TxtResult.Text = "Game over: Agent reached 3 points. You loose";
+                EndGame();
+            }
+        }
+
+        private void EndGame()
+        {
+            _gameOver = true;
+            
+            var panel = this.FindControl<WrapPanel>("ButtonPanel");
+            foreach (var child in panel.Children)
+            {
+                if (child is Button b)
+                    b.IsEnabled = false;
+            }
         }
     }
 }
-
 /*
- Jeg har lavet mine koder ved hjælp af GEKOS hjemmeside
+ Jeg har lavet mine koder ved hjælp af GEKOS 
 Kildekommentar – brugt undervisningsmateriale:
 
 - Random (_random.Next())
